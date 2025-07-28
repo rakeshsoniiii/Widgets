@@ -1,0 +1,50 @@
+<h1 class="title">Scroll to see the effect</h1>
+<h2>⬇Scroll Down lil fish</h2>
+<div class="container">
+  <p class="blur">Machlii</p>
+  <p class="blur">Go back</p>
+  <p class="blur">to the</p>
+  <p class="blur">sea</p>
+  <p class="blur">or</p>
+  <p class="blur">Zoo</p>
+</div>
+
+<style>
+  body {
+    font-family: system-ui;
+    background: #000000;
+    color: white;
+    text-align: center;
+  }
+
+  .title {
+    margin-top: 4rem;
+  }
+
+  .container {
+    padding-top: 10rem;
+    padding-bottom: 10rem;
+    font-size: 10rem;
+    font-weight: bold;
+  }
+
+  .blur {
+    animation: blurAnimation both;
+    animation-timeline: view();
+  }
+
+  @keyframes blurAnimation {
+    0% {
+      filter: blur(20px);
+    }
+
+    45%,
+    55% {
+      filter: blur(0px);
+    }
+
+    100% {
+      filter: blur(20px);
+    }
+  }
+</style>
