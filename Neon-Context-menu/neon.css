@@ -293,6 +293,12 @@
     height: 20px;
 }
 
+#menu li svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
 #menu header {
     font-size: 0.75rem;
     font-weight: 300;
