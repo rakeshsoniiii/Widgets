@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="glooey.css">
+    <title>Glooey Button</title>
+    
+</head>
+<body>
+<main id="app" class="dark">
+    
+    <header class="header">
+        <h1 class="title">A Goggly button</h1>
+        <p class="description">Hover to experience!</p>
+    </header>
+    <div class="button-container">
+        <button class="fish-cake-button" type="button">
+            Fish Cake Button
+        </button>
+        
+    </div>
+     
+
+</main>
+
+
+<svg width="0" height="0" style="position: absolute;">
+  <filter id="goo" x="-50%" y="-50%" width="200%" height="200%">
+    <feComponentTransfer>
+      <feFuncA type="discrete" tableValues="0 1"></feFuncA>
+    </feComponentTransfer>
+    <feGaussianBlur stdDeviation="5"></feGaussianBlur>
+    <feComponentTransfer>
+      <feFuncA type="table" tableValues="-5 11"></feFuncA>
+    </feComponentTransfer>
+  </filter>
+</svg>
+
+<!-- 
+
+
+    social icons
+-->
+<a class="social-icon linkedin" href="https://www.linkedin.com/in/rakeshsoniiii/" title="view my linkedin" target="_blank">
+        Made by Rakesh
+    </a>
+
+<script src="glooey.js"></script>
+</body>
+</html>
