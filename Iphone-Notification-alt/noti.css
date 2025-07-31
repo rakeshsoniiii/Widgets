@@ -1,0 +1,49 @@
+:root {
+    /* vars */
+    --bg: #4b475c;
+}
+
+
+.notification {
+  --opacity: 0;
+  --height: 0;
+  --rounded: 0px;
+  --rounded-out-radius-base: 0px;
+}
+
+h1,h2 {
+  text-wrap: balance;
+  text-wrap: pretty;
+  opacity: 0.5;
+}
+
+h2 {
+  font-family: 'Asap Condensed';
+  font-weight: 400;
+  
+}
+
+body {
+  background: var(--bg);
+  height: 100vh;
+}
+
+.arrow {
+  position: absolute;
+  inset: 22vh;
+  height: 20vh;
+  left: 50%;
+  translate: -50% 0;
+  rotate: -30deg;
+  filter: invert(1) drop-shadow(0 1.5px 0px black);
+  opacity: 0.5;
+}
+
+
+
+
+
+
+
+
+

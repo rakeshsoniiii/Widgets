@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="noti.css">
+    <title>Frosted Glass Gooey Gravity Nav</title>
+</head>
+<body>
+<main id="app" class="h-full">
+  
+    <!-- border radius done using; -->
+    <!-- https://github.com/simeydotme/tailwind-rounded-out -->
+
+    <header class="bg-black !flex justify-center fixed inset-0 bottom-auto h-8">
+      <div class="notification w-max px-12 h-[var(--height)] relative bg-black top-full rounded-b-[var(--rounded)] rounded-out-t transform-gpu">
+        <span class="relative top-1 flex justify-center gap-4 text-2xl origin-top translate-y-[var(--translate)] blur-[var(--blur)] scale-[var(--scale)] opacity-[var(--opacity)]">
+          <svg class="w-[1em]" viewBox="0 0 24 24"><defs><filter id="svgSpinnersGooeyBalls10"><feGaussianBlur in="SourceGraphic" result="y" stdDeviation="1.5"/><feColorMatrix in="y" result="z" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -7"/><feBlend in="SourceGraphic" in2="z"/></filter></defs><g fill="currentColor" filter="url(#svgSpinnersGooeyBalls10)"><circle cx="4" cy="12" r="3"><animate attributeName="cx" calcMode="spline" dur="0.75s" keySplines=".56,.52,.17,.98;.56,.52,.17,.98" repeatCount="indefinite" values="4;9;4"/><animate attributeName="r" calcMode="spline" dur="0.75s" keySplines=".56,.52,.17,.98;.56,.52,.17,.98" repeatCount="indefinite" values="3;8;3"/></circle><circle cx="15" cy="12" r="8"><animate attributeName="cx" calcMode="spline" dur="0.75s" keySplines=".56,.52,.17,.98;.56,.52,.17,.98" repeatCount="indefinite" values="15;20;15"/><animate attributeName="r" calcMode="spline" dur="0.75s" keySplines=".56,.52,.17,.98;.56,.52,.17,.98" repeatCount="indefinite" values="8;3;8"/></circle></g></svg>
+          <em>You're my soda pop...</em>
+        </span>
+      </div>
+    </header>
+  
+  <section class="grid place-content-center text-center mt-16">
+    <h1>A bouncy notification with animated border radii</h1>
+    <h2>Inspired by <a href='1940870221612610020' target='_blank'>@k_grajeda</a>, Using <a href='https://animejs.com' target='_blank'>Animejs</a> &amp; <a href='https://github.com/simeydotme/tailwind-rounded-out' target='_blank'>Tailwind-rounded-out</a></h2>
+  </section>
+    
+</main>
+
+
+
+<img src="https://assets.codepen.io/13471/up-arrow_2926153.png" class="arrow" />
+
+<audio id="pop" src="https://assets.codepen.io/13471/soda-pop3.wav" preload="auto" />
+
+<style type="text/tailwindcss"> 
+
+  /* https://github.com/simeydotme/tailwind-rounded-out  */
+
+  @theme {
+    --rounded-out-radius-base: 1rem;
+    --rounded-out-mask: radial-gradient(100% 100% at center, transparent calc(50% - 0.25px), black calc(50% + 0.25px));
+    --rounded-out-mask-size: 200% 200%;
+  }
+
+  @utility rounded-out {
+    --rounded-out-radius: var(--rounded-out-radius-base);
+
+    &::before,
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-auto bottom-0;
+    }
+
+    &::before {
+      @apply left-[calc(var(--rounded-out-radius)*-1)];
+      @apply mask-position-[100%_100%];
+    }
+
+    &::after {
+      @apply right-[calc(var(--rounded-out-radius)*-1)];
+      @apply mask-position-[0%_100%];
+    }
+  }
+
+  @utility rounded-out-* {
+    --rounded-out-radius: --value([length]);
+    --rounded-out-radius: --value(--radius-*);
+
+    &::before,
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-auto bottom-0;
+    }
+
+    &::before {
+      @apply left-[calc(var(--rounded-out-radius)*-1)];
+      @apply mask-position-[100%_100%];
+    }
+
+    &::after {
+      @apply right-[calc(var(--rounded-out-radius)*-1)];
+      @apply mask-position-[0%_100%];
+    }
+  }
+
+  @utility rounded-out-b {
+    --rounded-out-radius-b: var(--rounded-out-radius-base);
+
+    &::before,
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-b)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-auto bottom-0;
+    }
+
+    &::before {
+      @apply left-[calc(var(--rounded-out-radius-b)*-1)];
+      @apply mask-position-[100%_100%];
+    }
+
+    &::after {
+      @apply right-[calc(var(--rounded-out-radius-b)*-1)];
+      @apply mask-position-[0%_100%];
+    }
+  }
+
+  @utility rounded-out-b-* {
+    --rounded-out-radius-b: --value([length]);
+    --rounded-out-radius-b: --value(--radius-*);
+
+    &::before,
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-b)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-auto bottom-0;
+    }
+
+    &::before {
+      @apply left-[calc(var(--rounded-out-radius-b)*-1)];
+      @apply mask-position-[100%_100%];
+    }
+
+    &::after {
+      @apply right-[calc(var(--rounded-out-radius-b)*-1)];
+      @apply mask-position-[0%_100%];
+    }
+  }
+
+  @utility rounded-out-bl {
+    --rounded-out-radius-bl: var(--rounded-out-radius-base);
+
+    &::before {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-bl)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-auto bottom-0;
+    }
+
+    &::before {
+      @apply left-[calc(var(--rounded-out-radius-bl)*-1)];
+      @apply mask-position-[100%_100%];
+    }
+  }
+
+  @utility rounded-out-bl-* {
+    --rounded-out-radius-bl: --value([length]);
+    --rounded-out-radius-bl: --value(--radius-*);
+
+    &::before {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-bl)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-auto bottom-0;
+    }
+
+    &::before {
+      @apply left-[calc(var(--rounded-out-radius-bl)*-1)];
+      @apply mask-position-[100%_100%];
+    }
+  }
+
+  @utility rounded-out-br {
+    --rounded-out-radius-br: var(--rounded-out-radius-base);
+
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-br)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-auto bottom-0;
+    }
+
+    &::after {
+      @apply right-[calc(var(--rounded-out-radius-br)*-1)];
+      @apply mask-position-[0%_100%];
+    }
+  }
+
+  @utility rounded-out-br-* {
+    --rounded-out-radius-br: --value([length]);
+    --rounded-out-radius-br: --value(--radius-*);
+
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-br)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-auto bottom-0;
+    }
+
+    &::after {
+      @apply right-[calc(var(--rounded-out-radius-br)*-1)];
+      @apply mask-position-[0%_100%];
+    }
+  }
+
+  @utility rounded-out-t {
+    --rounded-out-radius-t: var(--rounded-out-radius-base);
+
+    &::before,
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-t)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-0 bottom-auto;
+    }
+
+    &::before {
+      @apply left-[calc(var(--rounded-out-radius-t)*-1)];
+      @apply mask-position-[100%_0%];
+    }
+
+    &::after {
+      @apply right-[calc(var(--rounded-out-radius-t)*-1)];
+      @apply mask-position-[0%_0%];
+    }
+  }
+
+  @utility rounded-out-t-* {
+    --rounded-out-radius-t: --value([length]);
+    --rounded-out-radius-t: --value(--radius-*);
+
+    &::before,
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-t)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-0 bottom-auto;
+    }
+
+    &::before {
+      @apply left-[calc(var(--rounded-out-radius-t)*-1)];
+      @apply mask-position-[100%_0%];
+    }
+
+    &::after {
+      @apply right-[calc(var(--rounded-out-radius-t)*-1)];
+      @apply mask-position-[0%_0%];
+    }
+  }
+
+  @utility rounded-out-tl {
+    --rounded-out-radius-tl: var(--rounded-out-radius-base);
+
+    &::before {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-tl)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-0 bottom-auto;
+    }
+
+    &::before {
+      @apply left-[calc(var(--rounded-out-radius-tl)*-1)];
+      @apply mask-position-[100%_0%];
+    }
+  }
+
+  @utility rounded-out-tl-* {
+    --rounded-out-radius-tl: --value([length]);
+    --rounded-out-radius-tl: --value(--radius-*);
+
+    &::before {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-tl)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-0 bottom-auto;
+    }
+
+    &::before {
+      @apply left-[calc(var(--rounded-out-radius-tl)*-1)];
+      @apply mask-position-[100%_0%];
+    }
+  }
+
+  @utility rounded-out-tr {
+    --rounded-out-radius-tr: var(--rounded-out-radius-base);
+
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-tr)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-0 bottom-auto;
+    }
+
+    &::after {
+      @apply right-[calc(var(--rounded-out-radius-tr)*-1)];
+      @apply mask-position-[0%_0%];
+    }
+  }
+
+  @utility rounded-out-tr-* {
+    --rounded-out-radius-tr: --value([length]);
+    --rounded-out-radius-tr: --value(--radius-*);
+
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-tr)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply top-0 bottom-auto;
+    }
+
+    &::after {
+      @apply right-[calc(var(--rounded-out-radius-tr)*-1)];
+      @apply mask-position-[0%_0%];
+    }
+  }
+
+  @utility rounded-out-l {
+    --rounded-out-radius-l: var(--rounded-out-radius-base);
+
+    &::before,
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-l)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-0 right-auto;
+    }
+
+    &::before {
+      @apply top-[calc(var(--rounded-out-radius-l)*-1)] bottom-auto;
+      @apply mask-position-[0%_100%];
+    }
+
+    &::after {
+      @apply bottom-[calc(var(--rounded-out-radius-l)*-1)] top-auto;
+      @apply mask-position-[0%_0%];
+    }
+  }
+
+  @utility rounded-out-l-* {
+    --rounded-out-radius-l: --value([length]);
+    --rounded-out-radius-l: --value(--radius-*);
+
+    &::before,
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-l)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-0 right-auto;
+    }
+
+    &::before {
+      @apply top-[calc(var(--rounded-out-radius-l)*-1)] bottom-auto;
+      @apply mask-position-[0%_100%];
+    }
+
+    &::after {
+      @apply bottom-[calc(var(--rounded-out-radius-l)*-1)] top-auto;
+      @apply mask-position-[0%_0%];
+    }
+  }
+
+  @utility rounded-out-lt {
+    --rounded-out-radius-lt: var(--rounded-out-radius-base);
+
+    &::before {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-lt)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-0 right-auto;
+    }
+
+    &::before {
+      @apply top-[calc(var(--rounded-out-radius-lt)*-1)];
+      @apply mask-position-[0%_100%];
+    }
+  }
+
+  @utility rounded-out-lt-* {
+    --rounded-out-radius-lt: --value([length]);
+    --rounded-out-radius-lt: --value(--radius-*);
+
+    &::before {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-lt)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-0 right-auto;
+    }
+
+    &::before {
+      @apply top-[calc(var(--rounded-out-radius-lt)*-1)];
+      @apply mask-position-[0%_100%];
+    }
+  }
+
+  @utility rounded-out-lb {
+    --rounded-out-radius-lb: var(--rounded-out-radius-base);
+
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-lb)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-0 right-auto;
+    }
+
+    &::after {
+      @apply bottom-[calc(var(--rounded-out-radius-lb)*-1)];
+      @apply mask-position-[0%_0%];
+    }
+  }
+
+  @utility rounded-out-lb-* {
+    --rounded-out-radius-lb: --value([length]);
+    --rounded-out-radius-lb: --value(--radius-*);
+
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-lb)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-0 right-auto;
+    }
+
+    &::after {
+      @apply bottom-[calc(var(--rounded-out-radius-lb)*-1)];
+      @apply mask-position-[0%_0%];
+    }
+  }
+
+  @utility rounded-out-r {
+    --rounded-out-radius-r: var(--rounded-out-radius-base);
+
+    &::before,
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-r)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-auto right-0;
+    }
+
+    &::before {
+      @apply top-[calc(var(--rounded-out-radius-r)*-1)] bottom-auto;
+      @apply mask-position-[100%_100%];
+    }
+
+    &::after {
+      @apply bottom-[calc(var(--rounded-out-radius-r)*-1)] top-auto;
+      @apply mask-position-[100%_0%];
+    }
+  }
+
+  @utility rounded-out-r-* {
+    --rounded-out-radius-r: --value([length]);
+    --rounded-out-radius-r: --value(--radius-*);
+
+    &::before,
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-r)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-auto right-0;
+    }
+
+    &::before {
+      @apply top-[calc(var(--rounded-out-radius-r)*-1)] bottom-auto;
+      @apply mask-position-[100%_100%];
+    }
+
+    &::after {
+      @apply bottom-[calc(var(--rounded-out-radius-r)*-1)] top-auto;
+      @apply mask-position-[100%_0%];
+    }
+  }
+
+  @utility rounded-out-rt {
+    --rounded-out-radius-rt: var(--rounded-out-radius-base);
+
+    &::before {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-rt)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-auto right-0;
+    }
+
+    &::before {
+      @apply top-[calc(var(--rounded-out-radius-rt)*-1)];
+      @apply mask-position-[100%_100%];
+    }
+  }
+
+  @utility rounded-out-rt-* {
+    --rounded-out-radius-rt: --value([length]);
+    --rounded-out-radius-rt: --value(--radius-*);
+
+    &::before {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-rt)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-auto right-0;
+    }
+
+    &::before {
+      @apply top-[calc(var(--rounded-out-radius-rt)*-1)];
+      @apply mask-position-[100%_100%];
+    }
+  }
+
+  @utility rounded-out-rb {
+    --rounded-out-radius-rb: var(--rounded-out-radius-base);
+
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-rb)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-auto right-0;
+    }
+
+    &::after {
+      @apply bottom-[calc(var(--rounded-out-radius-rb)*-1)];
+      @apply mask-position-[100%_0%];
+    }
+  }
+
+  @utility rounded-out-rb-* {
+    --rounded-out-radius-rb: --value([length]);
+    --rounded-out-radius-rb: --value(--radius-*);
+
+    &::after {
+      @apply [background:inherit] bg-inherit mask-[var(--rounded-out-mask)] mask-size-[var(--rounded-out-mask-size)];
+      @apply content-[""] absolute w-[var(--rounded-out-radius-rb)] aspect-1/1 block overflow-hidden pointer-events-none;
+      @apply left-auto right-0;
+    }
+
+    &::after {
+      @apply bottom-[calc(var(--rounded-out-radius-rb)*-1)];
+      @apply mask-position-[100%_0%];
+    }
+  }
+
+</style>
+
+
+<!-- 
+
+    social icons
+-->
+<a class="social-icon linkedin" href="https://www.linkedin.com/in/rakeshsoniiii/" title="view my linkedin" target="_blank">
+        Made by Rakesh
+    </a>
+<script src="noti.js"></script>
+</body>
+</html>
