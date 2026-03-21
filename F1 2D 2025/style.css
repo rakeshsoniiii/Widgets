@@ -1,0 +1,109 @@
+@import url(https://fonts.bunny.net/css?family=jura:300,500);
+
+@layer base, demo;
+
+@layer base {
+    * { box-sizing: border-box; }
+    :root { --bg-color: rgb(28, 25, 23); }
+    body {
+        background-color: var(--bg-color);
+        color: white;
+        min-height: 500vh; /* Scroll height */
+        margin: 0;
+        padding: 2rem;
+        font-family: "Jura", sans-serif;
+    }
+}
+
+@layer demo {
+    :root { --track-height: 70vh; }
+
+    h1 {
+        position: sticky;
+        top: 1rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: clamp(1rem, 4vw, 2rem);
+    }
+    h1 span { color: red; font-weight: 700; }
+
+    .track {
+        --total-rounds: attr(data-rounds number);
+        --total-drivers: attr(data-drivers number);
+        --round-height: calc(100% / var(--total-rounds));
+        --car-width: calc(100cqi / var(--total-drivers));
+
+        position: fixed;
+        inset: 120px 4vw 0;
+        height: var(--track-height);
+        background: linear-gradient(rgba(255, 255, 255, 0.1) 0 var(--round-height), transparent 0) 0 0 / 100% var(--round-height);
+        container-type: size;
+        animation: --locations 1ms steps(24) forwards;
+        animation-timeline: scroll();
+    }
+
+    /* Finish Line */
+    .track::before {
+        content: '';
+        position: absolute;
+        top: 0; width: 100%; height: 20px;
+        background-image: conic-gradient(black 25%, rgba(255,255,255,0.5) 0 50%, black 0 75%, rgba(255,255,255,0.5) 0);
+        background-size: 20px 20px;
+    }
+
+    /* Race Location Overlay */
+    .track::after {
+        content: var(--round);
+        position: fixed;
+        top: 4rem; left: 50%;
+        translate: -50% 0;
+        font-size: 1.5rem;
+        color: white;
+        text-transform: uppercase;
+    }
+
+    .car {
+        /* CSS attr() fetches round points from data attributes */
+        --r1: attr(data-r1 number);
+        --r2: calc(var(--r1) + attr(data-r2 number));
+        --r3: calc(var(--r2) + attr(data-r3 number));
+        --r4: calc(var(--r3) + attr(data-r4 number));
+        /* ... and so on for 24 rounds ... */
+        --r24: attr(data-total number); /* Final Score */
+
+        --y24: calc((1 - (var(--r24) / var(--highest-score))) * var(--track-height));
+
+        position: absolute;
+        width: var(--car-width);
+        left: calc(var(--car-width) * (sibling-index() - 1));
+        color: attr(data-color type(<color>));
+        display: grid; 
+        place-content: center;
+        transition: transform 0.2s;
+        
+        animation: championship linear both;
+        animation-timeline: scroll(root block);
+        animation-timing-function: steps(24);
+        
+    }
+
+    .car-label {
+        writing-mode: vertical-rl;
+        position: absolute;
+        top: 100%; left: 50%;
+        translate: -50% 10px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .car svg {
+        width: 100%; height: 60px;
+        rotate: -90deg;
+        fill: currentColor;
+    }
+
+    @keyframes championship {
+        0% { transform: translateY(var(--track-height)); }
+        100% { transform: translateY(var(--y24)); }
+    }
+}

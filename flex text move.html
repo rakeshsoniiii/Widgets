@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Fold Effect</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --step--2: clamp(3.13rem, 2.62rem + 2.51vw, 5.76rem);
+            --step--1: clamp(3.75rem, 3.09rem + 3.29vw, 7.20rem);
+            --step-0: clamp(4.50rem, 3.64rem + 4.29vw, 9.00rem);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #efefef;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            font-weight: 600;
+            min-height: 400vh;
+            overflow-x: hidden;
+        }
+
+        .marquee {
+            border-bottom: 1px solid #1a1a1a;
+            color: #ccc;
+            font-size: var(--step-0);
+            font-weight: 700;
+            height: calc(170px + 4rem);
+            overflow: hidden;
+            position: relative;
+            width: 100vw;
+        }
+
+        .marquee img {
+            object-fit: cover;
+            max-height: 150px;
+        }
+
+        .track {
+            height: 100%;
+            overflow: hidden;
+            padding: 2rem 0;
+            position: absolute;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            animation: marquee 30s linear infinite;
+            will-change: transform;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .-focus {
+            color: #1a1a1a;
+            font-weight: 900;
+        }
+
+        .screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wrapper-3d {
+            position: relative;
+            perspective: 20vw;
+            transform-style: preserve-3d;
+        }
+
+        .fold {
+            overflow: hidden;
+            width: 100vw;
+            height: 80vh;
+        }
+
+        .fold-top {
+            position: absolute;
+            transform-origin: bottom center;
+            left: 0;
+            right: 0;
+            bottom: 100%;
+            transform: rotateX(-120deg);
+        }
+
+        .fold-center {
+            width: 100vw;
+            position: relative;
+            z-index: 1;
+        }
+
+        .fold-bottom {
+            position: absolute;
+            transform-origin: top center;
+            right: 0;
+            left: 0;
+            top: 100%;
+            transform: rotateX(120deg);
+        }
+
+        .fold-align {
+            width: 100%;
+            height: 100%;
+        }
+
+        .fold-bottom .fold-align {
+            transform: translateY(-100%);
+        }
+
+        .fold-top .fold-align {
+            transform: translateY(100%);
+        }
+
+        .fold-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Ensure proper stacking */
+        .fold-top {
+            z-index: 2;
+        }
+
+        .fold-center {
+            z-index: 3;
+        }
+
+        .fold-bottom {
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen" id="fold-effect">
+        <div class="wrapper-3d">
+            <div class="fold fold-top">
+                <div class="fold-align">
+                    <div class="fold-content">
+                        <div class="marquee">
+                            <div class="track">
+                                Creators.Creators.<span class="-focus">Creators.</span>Creators.Creators.Creators.Creators.Creators.Creators.Creators.<span class="-focus">Creators.</span>Creators.Creators.Creators.Creators.Creators.
+                            </div>
+                        </div>
+                        <div class="marquee">
+                            <div class="track">
+                                Thinkers.Thinkers.<span class="-focus">Thinkers.</span>Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.<span class="-focus">Thinkers.</span>Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.
+                            </div>
+                        </div>
+                        <div class="marquee">
+                            <div class="track">
+                                Innovators.Innovators.<span class="-focus">Innovators.</span>Innovators.Innovators.Innovators.Innovators.Innovators.Innovators.Innovators.<span class="-focus">Innovators.</span>Innovators.Innovators.Innovators.Innovators.Innovators.
+                            </div>
+                        </div>
+                        <div class="marquee">
+                            <div class="track">
+                                Rebels.Rebels.Rebels.<span class="-focus">Rebels.</span>Rebels.Rebels.Rebels.Rebels.Rebels.Rebels.Rebels.<span class="-focus">Rebels.</span>Rebels.Rebels.Rebels.Rebels.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fold fold-center" id="center-fold">
+                <div class="fold-align">
+                    <div class="fold-content" id="center-content">
+                        <div class="marquee">
+                            <div class="track">
+                                Creators.Creators.<span class="-focus">Creators.</span>Creators.Creators.Creators.Creators.Creators.Creators.Creators.<span class="-focus">Creators.</span>Creators.Creators.Creators.Creators.Creators.
+                            </div>
+                        </div>
+                        <div class="marquee">
+                            <div class="track">
+                                Thinkers.Thinkers.<span class="-focus">Thinkers.</span>Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.<span class="-focus">Thinkers.</span>Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.
+                            </div>
+                        </div>
+                        <div class="marquee">
+                            <div class="track">
+                                Innovators.Innovators.<span class="-focus">Innovators.</span>Innovators.Innovators.Innovators.Innovators.Innovators.Innovators.Innovators.<span class="-focus">Innovators.</span>Innovators.Innovators.Innovators.Innovators.Innovators.
+                            </div>
+                        </div>
+                        <div class="marquee">
+                            <div class="track">
+                                Rebels.Rebels.Rebels.<span class="-focus">Rebels.</span>Rebels.Rebels.Rebels.Rebels.Rebels.Rebels.Rebels.<span class="-focus">Rebels.</span>Rebels.Rebels.Rebels.Rebels.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fold fold-bottom">
+                <div class="fold-align">
+                    <div class="fold-content">
+                        <div class="marquee">
+                            <div class="track">
+                                Creators.Creators.<span class="-focus">Creators.</span>Creators.Creators.Creators.Creators.Creators.Creators.Creators.<span class="-focus">Creators.</span>Creators.Creators.Creators.Creators.Creators.
+                            </div>
+                        </div>
+                        <div class="marquee">
+                            <div class="track">
+                                Thinkers.Thinkers.<span class="-focus">Thinkers.</span>Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.<span class="-focus">Thinkers.</span>Thinkers.Thinkers.Thinkers.Thinkers.Thinkers.
+                            </div>
+                        </div>
+                        <div class="marquee">
+                            <div class="track">
+                                Innovators.Innovators.<span class="-focus">Innovators.</span>Innovators.Innovators.Innovators.Innovators.Innovators.Innovators.Innovators.<span class="-focus">Innovators.</span>Innovators.Innovators.Innovators.Innovators.Innovators.
+                            </div>
+                        </div>
+                        <div class="marquee">
+                            <div class="track">
+                                Rebels.Rebels.Rebels.<span class="-focus">Rebels.</span>Rebels.Rebels.Rebels.Rebels.Rebels.Rebels.Rebels.<span class="-focus">Rebels.</span>Rebels.Rebels.Rebels.Rebels.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Enhanced marquee animation with GSAP
+        gsap.utils.toArray('.marquee').forEach((el, index) => {
+            const track = el.querySelector('.track');
+            const isEven = index % 2 === 0;
+            
+            gsap.set(track, { x: 0 });
+            
+            gsap.to(track, {
+                x: isEven ? -2000 : -1000,
+                duration: 30,
+                ease: "none",
+                repeat: -1,
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 1
+                }
+            });
+        });
+
+        // Fold effect with smooth scrolling
+        const centerContent = document.getElementById('center-content');
+        const centerFold = document.getElementById('center-fold');
+        const foldsContent = Array.from(document.querySelectorAll('.fold-content'));
+
+        let targetScroll = 0;
+        let currentScroll = 0;
+
+        const updateScrollEffect = () => {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const overflowHeight = centerContent.clientHeight - centerFold.clientHeight;
+            
+            // Update body height
+            document.body.style.height = `${overflowHeight + window.innerHeight}px`;
+            
+            // Smooth scroll interpolation
+            targetScroll = -scrollTop;
+            currentScroll += (targetScroll - currentScroll) * 0.1;
+            
+            // Apply transform to fold contents
+            foldsContent.forEach(content => {
+                content.style.transform = `translateY(${currentScroll}px)`;
+            });
+            
+            requestAnimationFrame(updateScrollEffect);
+        };
+
+        // Start the animation loop
+        updateScrollEffect();
+
+        // Optional: Add mouse wheel smoothing
+        let isScrolling = false;
+        window.addEventListener('wheel', (e) => {
+            if (!isScrolling) {
+                isScrolling = true;
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 100);
+            }
+        });
+
+        // Refresh ScrollTrigger on resize
+        window.addEventListener('resize', () => {
+            ScrollTrigger.refresh();
+        });
+    </script>
+</body>
+</html>

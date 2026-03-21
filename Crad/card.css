@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+  --font-size-h-sm: 1.3rem;
+  --card-width: calc( var(--font-size-h-sm) * 10 );
+  --gap-x: 12px;
+  --gap-y: 18px;
+  --step: 1;
+}
+
+html, body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100%;
+  background: #000000c4;
+}
+
+.stack-cards-container {
+  position: relative;
+  height: 930vh;
+}
+@media(max-width: 576px) {
+  .stack-cards-container {
+    position: relative;
+    height: 700vh;
+  }
+}
+
+.s__rays {
+  position: fixed;
+  top: 0;
+  left: 0; 
+  right: 0; 
+  margin-left: auto; 
+  margin-right: auto; 
+  height: 100%;
+  width: 350px;
+  
+}
+
+a-rays {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    pointer-events: none;
+    transform: skew(-20deg);
+    transition: opacity .7s linear;
+    will-change: opacity;
+}
+
+a-rays .a__scene {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translate3d(-50%,0,0);
+}
+a-rays .a__scene path {
+    stroke-linecap: round;
+    stroke-width: 1.3px;
+    animation: a-rays-move 25s linear infinite;
+    will-change: transform;
+}
+.stack-cards {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 0; 
+  width: 100%;
+}
+
+.stack-cards__item {
+  height: 250px;
+  padding: 20px;
+  background: #0B4550;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.32);
+  position: absolute;
+  top: 50%; /* Center vertically */
+  left: 50%;
+  width: 350px;
+  border: 1px solid black;
+  border-radius: 1.5rem;
+  transform: translate(-50%, -50%);
+  transition: transform 1.3s cubic-bezier(0.9, -0.2, 0.1, 1.2), 
+              opacity 1.3s cubic-bezier(1, 0, 0, 1) 0s;
+  will-change: opacity, transform;
+  color: white;
+}
+
+.inner {
+  position: relative;
+  z-index: 2;
+  padding: calc(var(--card-width) * .1);
+  width: 100%;
+  height: 100%;
+  background-color: #0B4550;
+  border: 1px solid black;
+  border-radius: 1.5rem;
+}
+
+.stack-cards__item h3 {
+  color: white;
+  font-weight: 500;
+  margin-top: 0;
+}
+
+.stack-cards__item p {
+  font-weight: 300;
+}
+
+.stack-cards__item .counter {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    color: #4cede1;
+    font-size: 12px;
+    letter-spacing: .1em;
+    text-align: center;
+}
+
+.shadow {
+    position: absolute;
+    top: .5rem;
+    left: .5rem;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: #08333c;
+    border: 1px solid #252525;
+    border-radius: 1.5rem;
+}
+
+.stack-cards__item.slide-up {
+  transform: translate(-50%, -260%); /* Move up out of view */
+}
+
+.flex {
+  display: flex;
+  font-size: 1.5rem;
+}
+
+.flex-center {
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes a-rays-move {
+  0% {
+      transform: translateZ(0);
+  }
+  100% {
+      transform: translate3d(0,-100%,0);
+  }
+}
+
+
+
+
+
+/* testing, you can uncomment  */
+
+/* .stack-cards__item:nth-child(1) {
+    top: calc(var(--gap-y) * (1 - var(--step)));
+    left: calc(var(--gap-x) * (48 - var(--step)));
+    z-index: 3;
+}
+.stack-cards__item:nth-child(2) {
+    top: calc(var(--gap-y) * (2 - var(--step)));
+    left: calc(var(--gap-x) * (49 - var(--step)));
+    z-index: 3;
+}
+.stack-cards__item:nth-child(3) {
+    top: calc(var(--gap-y) * (3 - var(--step)));
+    left: calc(var(--gap-x) * (50 - var(--step)));
+    z-index: 3;
+}
+
+.stack-cards__item:nth-child(4) {
+    top: calc(var(--gap-y) * (4 - var(--step)));
+    left: calc(var(--gap-x) * (51 - var(--step)));
+    z-index: 3;
+}
+
+.stack-cards__item:nth-child(5) {
+    top: calc(var(--gap-y) * (5 - var(--step)));
+    left: calc(var(--gap-x) * (52 - var(--step)));
+    z-index: 3;
+}
+
+.stack-cards__item:nth-child(6) {
+    top: calc(var(--gap-y) * (6 - var(--step)));
+    left: calc(var(--gap-x) * (53 - var(--step)));
+    z-index: 3;
+} */

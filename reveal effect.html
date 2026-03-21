@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Effect</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&family=Shantell+Sans:ital,wght,BNCE,INFM@0,300..800,100,100;1,300..800,100,100&display=swap');
+
+        @property --k {
+            syntax: '<number>';
+            initial-value: 0;
+            inherits: true;
+        }
+
+        * {
+            margin: 0;
+        }
+
+        html,
+        body,
+        header,
+        article {
+            display: grid;
+        }
+
+        html {
+            scrollbar-color: #f7b267 #212121;
+        }
+
+        body {
+            --n: 231;
+            --m: 10;
+            color: #ededed;
+        }
+
+        body::before {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: #1a1a1a;
+            filter: url(#grainy);
+            content: '';
+        }
+
+        header,
+        article,
+        footer {
+            grid-gap: 1em;
+            justify-self: center;
+            place-content: center;
+            padding: min(4%, 1em);
+            max-width: 25em;
+            min-height: 100vh;
+            font: clamp(1.5em, 6vmin, 12.5em)/1.125 inconsolata, sans-serif;
+            text-wrap: balance;
+        }
+
+        header,
+        h3 {
+            color: #f25c54;
+            font-family: shantell sans, cursive;
+            text-align: center;
+        }
+
+        h2 {
+            color: #f7b267;
+            font-size: 1.75em;
+        }
+
+        em {
+            display: block;
+            font-size: .75em;
+            font-weight: 100;
+        }
+
+        h3 {
+            font-size: 1.375em;
+        }
+
+        a {
+            color: #ffb703;
+        }
+
+        p {
+            --k: calc(-1 * (var(--m) + 1));
+            animation: k steps(calc(var(--n) + var(--m) + 1)) both;
+            animation-timeline: view();
+            animation-range: entry 50% cover 50%;
+        }
+
+        @keyframes k {
+            to {
+                --k: var(--n);
+            }
+        }
+
+        span {
+            overflow: hidden;
+            background:
+                linear-gradient(#00f 0 0) text,
+                linear-gradient(90deg,
+                    red calc(var(--k) * 1ch),
+                    #000 calc((var(--k) + var(--m) + 1) * 1ch)),
+                linear-gradient(#000, #0f0);
+            background-blend-mode: lighten;
+            color: #0000;
+        }
+
+        footer p {
+            font: .625em shantell sans;
+        }
+
+        /* styling support info boxes */
+        aside {
+            position: fixed;
+            /* prevent it from scrolling */
+            inset: 0 0 auto;
+        }
+
+        .box {
+            margin: 1em;
+            border-left: solid 5px #dc3055;
+            padding: 1em;
+            box-shadow: 2px 2px 5px hsla(0, 0%, 0%, .35);
+            background: #851d40;
+            color: #fff;
+            font: 1.25em/1.25 ubuntu, trebuchet ms, arial, sans-serif;
+        }
+        
+        @supports (animation-range: entry 0% exit 0%) {
+            .box--view {
+                display: none;
+            }
+        }
+
+        code {
+            padding: 2px;
+            background: hsla(0, 0%, 0%, .35);
+            font: 1.1em/1.2 ubuntu mono, consolas, monaco, monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="title">Scroll to see the effect</h1>
+    <h2>reveal effect</h2>
+
+    <svg width="0" height="0">
+        <filter id="grainy" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="1.73"></feTurbulence>
+            <feColorMatrix type="saturate" values="0"></feColorMatrix>
+            <feBlend in="SourceGraphic" mode="multiply"></feBlend>
+        </filter>
+        <filter id="reveal-0" color-interpolation-filters="sRGB">
+            <feColorMatrix values="0 0 0 0 0 
+                                 0 0 0 0 0 
+                                 0 0 0 0 0 
+                                 1 0 0 0 0"></feColorMatrix>
+            <feComponentTransfer result="alphamap">
+                <feFuncA type="discrete" tableValues="0 0.09090909090909091 0.18181818181818182 0.2727272727272727 0.36363636363636365 0.45454545454545453 0.5454545454545454 0.6363636363636364 0.7272727272727273 0.8181818181818182 0.9090909090909091"></feFuncA>
+            </feComponentTransfer>
+            <feColorMatrix in="SourceGraphic" values="0 0 0 0 1 
+                                                     0 0 0 0 1 
+                                                     0 0 0 0 1 
+                                                     0 0 1 0 0"></feColorMatrix>
+            <feComposite in2="alphamap" operator="in"></feComposite>
+        </filter>
+        </svg>
+
+    <header>
+        <h2>no JS gallery of<br>char by char<br>on scroll<br>text reveal effects</h2>
+        <em>without wrapping each character in an element!</em>
+        <em>without any text duplication whatsoever!</em>
+    </header>
+
+    <article>
+        <h3>fade in</h3>
+        <p style="filter: url(#reveal-0)">
+            <span>They were careless people, Tom and Daisy -- they smashed up things and creatures and then retreated back into their money or their vast carelessness or whatever it was that kept them together, and let other people clean up the mess they had made.</span>
+        </p>
+    </article>
+    <article>
+        <h3>unblur</h3>
+        <p style="filter: url(#reveal-1)">
+            <span>They were careless people, Tom and Daisy -- they smashed up things and creatures and then retreated back into their money or their vast carelessness or whatever it was that kept them together, and let other people clean up the mess they had made.</span>
+        </p>
+    </article>
+    <article>
+        <h3>unblur &amp; fade in</h3>
+        <p style="filter: url(#reveal-2)">
+            <span>They were careless people, Tom and Daisy -- they smashed up things and creatures and then retreated back into their money or their vast carelessness or whatever it was that kept them together, and let other people clean up the mess they had made.</span>
+        </p>
+    </article>
+    <article>
+        <h3>unblur &amp; grow</h3>
+        <p style="filter: url(#reveal-3)">
+            <span>They were careless people, Tom and Daisy -- they smashed up things and creatures and then retreated back into their money or their vast carelessness or whatever it was that kept them together, and let other people clean up the mess they had made.</span>
+        </p>
+    </article>
+    <article>
+        <h3>unblur &amp; unshear</h3>
+        <p style="filter: url(#reveal-4)">
+            <span>They were careless people, Tom and Daisy -- they smashed up things and creatures and then retreated back into their money or their vast carelessness or whatever it was that kept them together, and let other people clean up the mess they had made.</span>
+        </p>
+    </article>
+    <article>
+        <h3>undissolve</h3>
+        <p style="filter: url(#reveal-5)">
+            <span>They were careless people, Tom and Daisy -- they smashed up things and creatures and then retreated back into their money or their vast carelessness or whatever it was that kept them together, and let other people clean up the mess they had made.</span>
+        </p>
+    </article>
+    <article>
+        <h3>wave fade in</h3>
+        <p style="filter: url(#reveal-6)">
+            <span>They were careless people, Tom and Daisy -- they smashed up things and creatures and then retreated back into their money or their vast carelessness or whatever it was that kept them together, and let other people clean up the mess they had made.</span>
+        </p>
+    </article>
+
+    <footer>
+        <p>
+            <strong>One more thing.</strong>
+            | If you like the Maths and Physics infused CSS, canvas and SVG work that I've been putting out for over a decade, you can support it by being a cool cat and becoming a patron on
+            <a href="https://www.patreon.com/anatudor" target="_blank">Patreon</a>
+            | or with a one time donation on
+            <a href="https://ko-fi.com/anatudor" target="_blank">Ko-fi</a>
+            | . Or at least by sharing this to show the world what can be done on the web these days... because I think it's pretty damn cool!
+        </p>
+    </footer>
+
+    <aside>
+        <div class="box box--fail box--view">
+            Sorry, it appears your browser does not support
+            <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/animation-range" target="_blank">
+                <code>animation-range</code>
+            </a>
+            , which is necessary for the scroll effects in this demo to work. As of June 2024, this is only supported by Chromium browsers 115+.
+            <em>(dynamically displayed box based on CSS support test -
+                <a href="https://codepen.io/thebabydino/full/qBKvjKM" target="_blank">more info</a>
+                | )</em>
+        </div>
+    </aside>
+
+</body>
+</html>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX-01 MEDIA CENTER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #39ff14;
+            --dark-green: #0b3d0b;
+            --black-bg: #050505;
+            --panel-bg: #0a0f0a;
+            --scanline-color: rgba(57, 255, 20, 0.05);
+            --ui-border: #1f5f1f;
+        }
+
+        body {
+            background-color: var(--black-bg);
+            color: var(--neon-green);
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, #1a2a1a 0%, #000000 70%);
+            user-select: none;
+        }
+
+        /* CRT Scanline Effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(
+                to bottom,
+                var(--scanline-color) 50%,
+                transparent 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 50;
+            animation: scan 10s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+
+        /* Glowing Text & Borders */
+        .neon-text {
+            text-shadow: 0 0 5px var(--neon-green);
+        }
+
+        .neon-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--ui-border);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.1);
+        }
+        
+        .neon-btn {
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #1f5f1f;
+            transition: all 0.2s;
+        }
+        .neon-btn:hover:not(:disabled) {
+            background: var(--neon-green);
+            color: black;
+            box-shadow: 0 0 15px var(--neon-green);
+            border-color: var(--neon-green);
+        }
+        .neon-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: #333;
+        }
+
+        .neon-input {
+            background: #000;
+            border: 1px solid #1f5f1f;
+            color: var(--neon-green);
+            outline: none;
+        }
+        .neon-input:focus {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 5px var(--neon-green);
+        }
+
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--neon-green);
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: #1f5f1f;
+        }
+
+        /* Trim Bar */
+        .trim-track {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background: rgba(57, 255, 20, 0.3);
+            pointer-events: none;
+        }
+
+        /* Animations */
+        .pulse-record { animation: pulse-red 1.5s infinite; }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+
+        .blob-anim { animation: blob-float 8s ease-in-out infinite; }
+        @keyframes blob-float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.01); }
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, rgba(57, 255, 20, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(57, 255, 20, 0.05) 1px, transparent 1px);
+        }
+
+        /* Filters */
+        .filter-rad { filter: sepia(100%) hue-rotate(50deg) saturate(300%) contrast(1.2); }
+        .filter-xray { filter: invert(100%) contrast(1.5); }
+        .filter-term { filter: grayscale(100%) contrast(2) brightness(0.8); }
+        .filter-bio { filter: hue-rotate(240deg) contrast(1.2) saturate(2); }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col items-center justify-center p-2 md:p-6 relative grid-bg overflow-hidden">
+
+    <div class="scanlines"></div>
+
+    <!-- Main Console -->
+    <div class="relative w-full max-w-7xl h-full flex flex-col gap-4 neon-box rounded-xl p-4 md:p-6 z-10 blob-anim backdrop-blur-sm bg-opacity-90 bg-[#050505]">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-end border-b border-green-900/50 pb-2 mb-2 shrink-0">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full border-2 border-green-500 flex items-center justify-center bg-black/50 shadow-[0_0_15px_#39ff14]">
+                    <i data-lucide="radio" class="w-5 h-5 text-[#39ff14]"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold tracking-widest neon-text">VORTEX-01</h1>
+                    <p class="text-[10px] text-green-700 tracking-[0.4em] uppercase">Visual Operations & Recording Terminal</p>
+                </div>
+            </div>
+            <div class="text-right flex flex-col items-end">
+                <div id="system-clock" class="text-xl font-bold font-mono">00:00:00</div>
+                <div class="text-[10px] text-green-600 flex items-center gap-2">
+                     ONLINE <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <div class="flex-1 flex flex-col md:flex-row gap-4 min-h-0">
+            
+            <!-- Left: Viewport & Editor Timeline -->
+            <div class="flex-[3] flex flex-col gap-3 min-w-0">
+                
+                <!-- Video Container -->
+                <div class="relative flex-1 bg-black border border-green-900 rounded-lg overflow-hidden shadow-inner group flex items-center justify-center min-h-[300px]">
+                    <!-- Empty State / Error State -->
+                    <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-green-800 pointer-events-none z-20 bg-black">
+                        <i data-lucide="aperture" class="w-20 h-20 mb-4 opacity-30 animate-spin-slow"></i>
+                        <p class="tracking-widest opacity-50">NO SIGNAL DETECTED</p>
+                        <p class="text-xs mt-2 opacity-30">INITIATE RECORDING OR IMPORT MEDIA</p>
+                    </div>
+
+                    <!-- Video Elements -->
+                    <video id="main-video" class="w-full h-full object-contain hidden z-10" playsinline crossorigin="anonymous"></video>
+                    
+                    <!-- Text Overlay Layer -->
+                    <div id="overlay-layer" class="absolute inset-0 pointer-events-none hidden z-10 overflow-hidden flex items-center justify-center">
+                        <h2 id="overlay-text-el" class="text-4xl font-bold neon-text text-center break-words max-w-[80%] drop-shadow-md"></h2>
+                    </div>
+
+                    <!-- Recording UI -->
+                    <div id="rec-indicator" class="hidden absolute top-4 left-4 flex items-center gap-2 bg-black/90 px-3 py-1 rounded border border-red-500/50 z-30">
+                        <div class="w-3 h-3 bg-red-600 rounded-full pulse-record"></div>
+                        <span class="text-red-500 font-bold tracking-wider text-sm">REC</span>
+                        <span id="rec-timer" class="text-red-400 font-mono ml-2 text-sm">00:00</span>
+                    </div>
+
+                    <!-- Processing UI -->
+                    <div id="processing-overlay" class="hidden absolute inset-0 bg-black/90 z-40 flex flex-col items-center justify-center">
+                        <div class="w-16 h-16 border-4 border-green-500/30 border-t-green-500 rounded-full animate-spin mb-4"></div>
+                        <h3 class="text-lg tracking-widest animate-pulse">RENDERING SEQUENCE</h3>
+                        <p id="render-progress" class="text-sm text-green-600 mt-2">0% COMPLETE</p>
+                    </div>
+                </div>
+
+                <!-- Editor Timeline Control -->
+                <div class="bg-[#050805] border border-green-900/50 rounded p-3 flex flex-col gap-2 relative">
+                    <div class="flex justify-between text-[10px] text-green-600 uppercase tracking-wider mb-1">
+                        <span>Timeline Sequence</span>
+                        <span id="time-display">00:00 / 00:00</span>
+                    </div>
+                    
+                    <!-- Seek Bar Container -->
+                    <div class="relative h-8 bg-black/50 border border-green-900/30 rounded w-full flex items-center cursor-pointer group" id="timeline-container">
+                        <!-- Active Trim Zone -->
+                        <div id="trim-zone" class="absolute h-full bg-green-900/30 border-l border-r border-green-500/50 hidden"></div>
+                        
+                        <!-- Progress Bar -->
+                        <div id="progress-bar" class="absolute h-full bg-green-500/10 w-0 pointer-events-none"></div>
+                        
+                        <!-- Scrubber Head -->
+                        <div id="scrubber" class="absolute top-0 bottom-0 w-1 bg-green-400 shadow-[0_0_10px_#39ff14] pointer-events-none transform -translate-x-1/2 left-0 transition-all duration-75"></div>
+
+                        <!-- Real Input -->
+                        <input type="range" id="seek-bar" value="0" min="0" max="100" step="0.1" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-20" disabled>
+                    </div>
+
+                    <!-- Timeline Tools -->
+                    <div class="flex gap-2 mt-1">
+                        <button id="btn-set-start" class="neon-btn px-2 py-1 text-[10px] rounded flex items-center gap-1" disabled>
+                            <i data-lucide="chevrons-right" class="w-3 h-3"></i> SET START
+                        </button>
+                        <button id="btn-set-end" class="neon-btn px-2 py-1 text-[10px] rounded flex items-center gap-1" disabled>
+                            <i data-lucide="chevrons-left" class="w-3 h-3"></i> SET END
+                        </button>
+                        <button id="btn-reset-trim" class="neon-btn px-2 py-1 text-[10px] rounded ml-auto text-red-400 border-red-900/50 hover:border-red-500" disabled>
+                            RESET CUT
+                        </button>
+                    </div>
+                    <div class="text-[10px] text-gray-500 font-mono mt-1">
+                        TRIM RANGE: <span id="trim-display" class="text-green-400">FULL CLIP</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Editing Console -->
+            <div class="flex-1 flex flex-col gap-3 min-w-[280px] bg-[#050505] border border-green-900/30 p-4 rounded-lg">
+                
+                <!-- Status Box -->
+                <div class="border-b border-green-800/50 pb-2 mb-2">
+                    <h3 class="text-xs text-green-600 tracking-widest mb-1">SYSTEM STATUS</h3>
+                    <p id="status-text" class="text-sm font-bold text-green-400 animate-pulse">STANDBY</p>
+                </div>
+
+                <!-- Primary Controls -->
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <button id="btn-record" class="col-span-2 py-3 bg-green-900/10 border border-green-600 text-green-400 hover:bg-green-500 hover:text-black transition-all rounded uppercase font-bold tracking-widest flex items-center justify-center gap-2 group">
+                        <i data-lucide="disc" class="w-4 h-4 group-hover:animate-spin"></i> 
+                        <span id="record-text">REC SCREEN</span>
+                    </button>
+                    <button id="btn-play" class="neon-btn py-2 rounded flex justify-center items-center" disabled><i data-lucide="play" class="w-4 h-4"></i></button>
+                    <button id="btn-stop" class="neon-btn py-2 rounded flex justify-center items-center" disabled><i data-lucide="square" class="w-4 h-4"></i></button>
+                </div>
+
+                <!-- Editor Tabs -->
+                <div class="flex flex-col gap-3 flex-1 overflow-y-auto pr-1 custom-scroll">
+                    
+                    <!-- Filters Module -->
+                    <div class="space-y-2">
+                        <h4 class="text-[10px] text-green-700 uppercase border-b border-green-900/30 pb-1">Visual Filters</h4>
+                        <div class="grid grid-cols-3 gap-1">
+                            <button class="filter-btn neon-btn py-2 text-[10px] rounded active-filter" data-filter="none">RAW</button>
+                            <button class="filter-btn neon-btn py-2 text-[10px] rounded text-yellow-200" data-filter="rad">RAD</button>
+                            <button class="filter-btn neon-btn py-2 text-[10px] rounded text-blue-200" data-filter="xray">X-RAY</button>
+                            <button class="filter-btn neon-btn py-2 text-[10px] rounded text-gray-400" data-filter="term">TERM</button>
+                            <button class="filter-btn neon-btn py-2 text-[10px] rounded text-purple-400" data-filter="bio">BIO</button>
+                        </div>
+                    </div>
+
+                    <!-- Text Module -->
+                    <div class="space-y-2">
+                        <h4 class="text-[10px] text-green-700 uppercase border-b border-green-900/30 pb-1">Data Stamp</h4>
+                        <div class="flex gap-2">
+                            <input type="text" id="text-input" placeholder="ENTER TEXT OVERLAY..." class="neon-input flex-1 px-2 py-1 text-xs rounded uppercase" disabled>
+                        </div>
+                        <div class="flex justify-between items-center text-xs">
+                           <label class="flex items-center gap-2 text-[10px] text-green-600">
+                               <input type="checkbox" id="text-toggle" class="accent-green-500" disabled> ENABLE OVERLAY
+                           </label>
+                        </div>
+                    </div>
+
+                    <!-- IO Module -->
+                    <div class="mt-auto space-y-2 pt-4 border-t border-green-900/30">
+                        <h4 class="text-[10px] text-green-700 uppercase">Export Operations</h4>
+                        
+                        <label class="neon-btn w-full py-2 text-xs text-center rounded cursor-pointer block">
+                            IMPORT MP4
+                            <input type="file" id="file-input" accept="video/mp4,video/webm" class="hidden">
+                        </label>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="btn-screenshot" class="neon-btn py-2 text-[10px] rounded flex items-center justify-center gap-1" disabled>
+                                <i data-lucide="camera" class="w-3 h-3"></i> SNAP
+                            </button>
+                            <button id="btn-export" class="bg-green-600 text-black font-bold border border-green-400 hover:bg-white hover:shadow-[0_0_15px_white] transition-all py-2 text-[10px] rounded flex items-center justify-center gap-1 disabled:opacity-50 disabled:bg-green-900 disabled:text-gray-500" disabled>
+                                <i data-lucide="save" class="w-3 h-3"></i> EXPORT VIDEO
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-2 text-[10px] text-green-800 flex justify-between uppercase">
+            <span>VORTEX OS v2.4.1</span>
+            <span>MEMORY: OK // DISK: OK</span>
+        </footer>
+
+    </div>
+
+    <!-- Hidden Canvas for Rendering -->
+    <canvas id="render-canvas" class="hidden"></canvas>
+
+    <script>
+        lucide.createIcons();
+
+        // --- Elements ---
+        const video = document.getElementById('main-video');
+        const emptyState = document.getElementById('empty-state');
+        const btnRecord = document.getElementById('btn-record');
+        const recordText = document.getElementById('record-text');
+        const btnPlay = document.getElementById('btn-play');
+        const btnStop = document.getElementById('btn-stop');
+        const btnExport = document.getElementById('btn-export');
+        const btnScreenshot = document.getElementById('btn-screenshot');
+        const seekBar = document.getElementById('seek-bar');
+        const scrubber = document.getElementById('scrubber');
+        const progressBar = document.getElementById('progress-bar');
+        const timeDisplay = document.getElementById('time-display');
+        const statusText = document.getElementById('status-text');
+        const recIndicator = document.getElementById('rec-indicator');
+        const recTimer = document.getElementById('rec-timer');
+        const renderCanvas = document.getElementById('render-canvas');
+        const processingOverlay = document.getElementById('processing-overlay');
+        const renderProgress = document.getElementById('render-progress');
+        
+        // Editor Controls
+        const btnSetStart = document.getElementById('btn-set-start');
+        const btnSetEnd = document.getElementById('btn-set-end');
+        const btnResetTrim = document.getElementById('btn-reset-trim');
+        const trimZone = document.getElementById('trim-zone');
+        const trimDisplay = document.getElementById('trim-display');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const textInput = document.getElementById('text-input');
+        const textToggle = document.getElementById('text-toggle');
+        const overlayLayer = document.getElementById('overlay-layer');
+        const overlayTextEl = document.getElementById('overlay-text-el');
+
+        // --- State ---
+        let mediaRecorder;
+        let recordedChunks = [];
+        let isRecording = false;
+        let recordingInterval;
+        let recordingStartTime;
+        let originalBlobURL = null;
+        
+        // Editing State
+        let trimStart = 0;
+        let trimEnd = 0;
+        let duration = 0;
+        let activeFilter = 'none';
+        let overlayText = '';
+        let showOverlay = false;
+
+        // --- Clock ---
+        setInterval(() => {
+            document.getElementById('system-clock').innerText = new Date().toLocaleTimeString('en-US', { hour12: false });
+        }, 1000);
+
+        function updateStatus(msg) {
+            statusText.innerText = msg;
+        }
+
+        function formatTime(s) {
+            if(isNaN(s)) return "00:00";
+            const m = Math.floor(s / 60);
+            const sec = Math.floor(s % 60);
+            return `${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+        }
+
+        // --- Setup UI Interactions ---
+        function enableControls(enabled) {
+            const els = [btnPlay, btnStop, btnExport, btnScreenshot, seekBar, btnSetStart, btnSetEnd, btnResetTrim, textInput, textToggle];
+            els.forEach(el => el.disabled = !enabled);
+            if (enabled) {
+                emptyState.classList.add('hidden');
+                video.classList.remove('hidden');
+            }
+        }
+
+        // --- Video Logic ---
+        function loadVideo(blob) {
+            if (originalBlobURL) URL.revokeObjectURL(originalBlobURL);
+            originalBlobURL = URL.createObjectURL(blob);
+            video.src = originalBlobURL;
+            video.load();
+            
+            video.onloadedmetadata = () => {
+                duration = video.duration;
+                trimStart = 0;
+                trimEnd = duration;
+                updateTrimUI();
+                enableControls(true);
+                updateStatus("MEDIA LOADED // READY FOR EDIT");
+                timeDisplay.innerText = `00:00 / ${formatTime(duration)}`;
+            };
+        }
+
+        // --- Trim Logic ---
+        function updateTrimUI() {
+            if (duration === 0) return;
+            const startPct = (trimStart / duration) * 100;
+            const endPct = (trimEnd / duration) * 100;
+            const width = endPct - startPct;
+
+            trimZone.style.left = `${startPct}%`;
+            trimZone.style.width = `${width}%`;
+            trimZone.classList.remove('hidden');
+            
+            trimDisplay.innerText = `${formatTime(trimStart)} - ${formatTime(trimEnd)}`;
+            
+            // Loop playback within trim
+            if (video.currentTime < trimStart || video.currentTime > trimEnd) {
+                video.currentTime = trimStart;
+            }
+        }
+
+        btnSetStart.onclick = () => {
+            if (video.currentTime >= trimEnd) return;
+            trimStart = video.currentTime;
+            updateTrimUI();
+            updateStatus(`TRIM START SET: ${formatTime(trimStart)}`);
+        };
+
+        btnSetEnd.onclick = () => {
+            if (video.currentTime <= trimStart) return;
+            trimEnd = video.currentTime;
+            updateTrimUI();
+            updateStatus(`TRIM END SET: ${formatTime(trimEnd)}`);
+        };
+
+        btnResetTrim.onclick = () => {
+            trimStart = 0;
+            trimEnd = duration;
+            updateTrimUI();
+            updateStatus("TRIM RESET");
+        };
+
+        // --- Filters & Overlay ---
+        filterBtns.forEach(btn => {
+            btn.onclick = () => {
+                // UI
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-green-500', 'text-black');
+                    b.classList.add('neon-btn');
+                });
+                btn.classList.remove('neon-btn');
+                btn.classList.add('bg-green-500', 'text-black');
+
+                // Logic
+                activeFilter = btn.dataset.filter;
+                applyVideoFilter(activeFilter);
+                updateStatus(`FILTER ACTIVE: ${activeFilter.toUpperCase()}`);
+            };
+        });
+
+        function applyVideoFilter(filterName) {
+            // Apply CSS class to video element for preview
+            video.className = "w-full h-full object-contain z-10"; // reset
+            if (filterName === 'rad') video.classList.add('filter-rad');
+            if (filterName === 'xray') video.classList.add('filter-xray');
+            if (filterName === 'term') video.classList.add('filter-term');
+            if (filterName === 'bio') video.classList.add('filter-bio');
+        }
+
+        textInput.oninput = (e) => {
+            overlayText = e.target.value;
+            overlayTextEl.innerText = overlayText;
+        };
+
+        textToggle.onchange = (e) => {
+            showOverlay = e.target.checked;
+            if(showOverlay) {
+                overlayLayer.classList.remove('hidden');
+                textInput.disabled = false;
+            } else {
+                overlayLayer.classList.add('hidden');
+            }
+        };
+
+        // --- Playback ---
+        btnPlay.onclick = () => {
+            if(video.paused) {
+                if (video.currentTime >= trimEnd) video.currentTime = trimStart;
+                video.play();
+                btnPlay.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i>`;
+                updateStatus("PLAYBACK SEQUENCE");
+            } else {
+                video.pause();
+                btnPlay.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i>`;
+                updateStatus("PAUSED");
+            }
+            lucide.createIcons();
+        };
+
+        btnStop.onclick = () => {
+            video.pause();
+            video.currentTime = trimStart;
+            btnPlay.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i>`;
+            updateStatus("STOPPED");
+            lucide.createIcons();
+        };
+
+        video.ontimeupdate = () => {
+            // UI Update
+            const pct = (video.currentTime / duration) * 100;
+            scrubber.style.left = `${pct}%`;
+            progressBar.style.width = `${pct}%`;
+            timeDisplay.innerText = `${formatTime(video.currentTime)} / ${formatTime(duration)}`;
+            
+            // Loop logic
+            if (!video.paused && video.currentTime >= trimEnd) {
+                video.currentTime = trimStart;
+                // Optional: video.pause();
+            }
+        };
+
+        seekBar.oninput = (e) => {
+            const time = (e.target.value / 100) * duration;
+            video.currentTime = time;
+        };
+
+        // --- Recording (Screen Capture) ---
+        btnRecord.onclick = async () => {
+            if (isRecording) {
+                if (mediaRecorder) mediaRecorder.stop();
+                return;
+            }
+
+            try {
+                // Check if API is available
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+                   throw new Error("API_UNAVAILABLE");
+                }
+
+                const stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { cursor: "always" },
+                    audio: true
+                });
+
+                mediaRecorder = new MediaRecorder(stream);
+                recordedChunks = [];
+
+                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    loadVideo(blob);
+                    stream.getTracks().forEach(track => track.stop());
+                    
+                    isRecording = false;
+                    clearInterval(recordingInterval);
+                    btnRecord.classList.remove('bg-red-900/20', 'border-red-500', 'text-red-500');
+                    btnRecord.classList.add('bg-green-900/10', 'border-green-600');
+                    recordText.innerText = "REC SCREEN";
+                    recIndicator.classList.add('hidden');
+                    updateStatus("CAPTURE COMPLETE");
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                
+                recordingStartTime = Date.now();
+                recordingInterval = setInterval(() => {
+                    const diff = Math.floor((Date.now() - recordingStartTime)/1000);
+                    recTimer.innerText = formatTime(diff);
+                }, 1000);
+
+                btnRecord.classList.add('bg-red-900/20', 'border-red-500', 'text-red-500');
+                btnRecord.classList.remove('bg-green-900/10', 'border-green-600');
+                recordText.innerText = "STOP REC";
+                recIndicator.classList.remove('hidden');
+                updateStatus("RECORDING IN PROGRESS...");
+
+            } catch (err) {
+                console.error("Recording Error:", err);
+                
+                // Cleanup UI
+                isRecording = false;
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+                btnRecord.classList.remove('bg-red-900/20', 'border-red-500', 'text-red-500');
+                btnRecord.classList.add('bg-green-900/10', 'border-green-600');
+                recordText.innerText = "REC SCREEN";
+                recIndicator.classList.add('hidden');
+                clearInterval(recordingInterval);
+
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    updateStatus("ACCESS DENIED // SECURITY BLOCK");
+                    emptyState.innerHTML = `
+                        <i data-lucide="shield-alert" class="w-20 h-20 mb-4 text-red-500"></i>
+                        <p class="tracking-widest text-red-500 text-lg">ACCESS DENIED</p>
+                        <div class="text-[10px] mt-2 opacity-70 text-center max-w-[250px] font-mono leading-tight">
+                            BROWSER PREVENTED SCREEN RECORDING.<br>
+                            (COMMON IN PREVIEW/IFRAME MODES)<br><br>
+                            <span class="text-green-400">TRY: USE 'IMPORT MP4' BUTTON BELOW</span>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                } else if (err.message === "API_UNAVAILABLE") {
+                    updateStatus("ERROR: API MISSING");
+                    alert("Your browser does not support Screen Recording API.");
+                } else {
+                    updateStatus("RECORDING FAILED");
+                }
+            }
+        };
+
+        document.getElementById('file-input').onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) loadVideo(file);
+        };
+
+        // --- RENDER ENGINE (The "InShot" Part) ---
+        // We play the video, draw it to canvas with filters/text, and record the canvas
+        btnExport.onclick = async () => {
+            if (!video.src) return;
+            
+            // 1. Setup
+            const wasPlaying = !video.paused;
+            video.pause();
+            processingOverlay.classList.remove('hidden');
+            updateStatus("INITIALIZING RENDER ENGINE...");
+            
+            renderCanvas.width = video.videoWidth;
+            renderCanvas.height = video.videoHeight;
+            const ctx = renderCanvas.getContext('2d');
+            
+            // 2. Prepare Recorder
+            // Note: Use a frame rate that matches typical video (e.g. 30)
+            const canvasStream = renderCanvas.captureStream(30); 
+            
+            // Try to mix audio if supported
+            let combinedStream;
+            let audioTrack;
+            
+            try {
+                if (video.captureStream) {
+                     const videoStream = video.captureStream();
+                     if(videoStream.getAudioTracks().length > 0) {
+                         audioTrack = videoStream.getAudioTracks()[0];
+                     }
+                } else if (video.mozCaptureStream) {
+                     const videoStream = video.mozCaptureStream();
+                      if(videoStream.getAudioTracks().length > 0) {
+                         audioTrack = videoStream.getAudioTracks()[0];
+                     }
+                }
+            } catch(e) {
+                console.warn("Could not capture audio track:", e);
+            }
+
+            if (audioTrack) {
+                combinedStream = new MediaStream([...canvasStream.getVideoTracks(), audioTrack]);
+            } else {
+                combinedStream = canvasStream;
+            }
+
+            // Robust MimeType Selection
+            const mimeTypes = [
+                "video/webm;codecs=vp9",
+                "video/webm;codecs=vp8", 
+                "video/webm",
+                "video/mp4"
+            ];
+            const selectedMime = mimeTypes.find(type => MediaRecorder.isTypeSupported(type)) || "video/webm";
+            console.log("Using MIME type:", selectedMime);
+
+            const exportRecorder = new MediaRecorder(combinedStream, { mimeType: selectedMime });
+            const chunks = [];
+            exportRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+            
+            exportRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: selectedMime });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `VORTEX_EDIT_${Date.now()}.${selectedMime.includes('mp4') ? 'mp4' : 'webm'}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                // Cleanup
+                processingOverlay.classList.add('hidden');
+                video.currentTime = trimStart;
+                video.className = "w-full h-full object-contain z-10"; // remove visual filter
+                applyVideoFilter(activeFilter); // reapply visual filter class
+                if (wasPlaying) video.play();
+                updateStatus("RENDER COMPLETE // DOWNLOADED");
+            };
+
+            // 3. Start Render Loop
+            video.currentTime = trimStart;
+            // Wait for seek
+            await new Promise(r => { video.onseeked = r; video.currentTime = trimStart; });
+
+            exportRecorder.start();
+            video.play();
+            
+            // Apply CSS filters to Context
+            function getFilterString() {
+                if (activeFilter === 'rad') return 'sepia(100%) hue-rotate(50deg) saturate(300%) contrast(1.2)';
+                if (activeFilter === 'xray') return 'invert(100%) contrast(1.5)';
+                if (activeFilter === 'term') return 'grayscale(100%) contrast(2) brightness(0.8)';
+                if (activeFilter === 'bio') return 'hue-rotate(240deg) contrast(1.2) saturate(2)';
+                return 'none';
+            }
+
+            const drawFrame = () => {
+                if (video.paused || video.ended || video.currentTime >= trimEnd) {
+                    if (exportRecorder.state === 'recording') {
+                        exportRecorder.stop();
+                        video.pause();
+                    }
+                    return;
+                }
+
+                // Progress UI
+                const p = ((video.currentTime - trimStart) / (trimEnd - trimStart)) * 100;
+                renderProgress.innerText = `${Math.round(p)}% PROCESSED`;
+
+                // Draw
+                ctx.filter = getFilterString();
+                ctx.drawImage(video, 0, 0, renderCanvas.width, renderCanvas.height);
+                ctx.filter = 'none';
+
+                // Text Overlay
+                if (showOverlay && overlayText) {
+                    ctx.font = "bold 40px 'Share Tech Mono', monospace";
+                    ctx.fillStyle = "#39ff14";
+                    ctx.textAlign = "center";
+                    ctx.shadowColor = "rgba(0,0,0,0.8)";
+                    ctx.shadowBlur = 10;
+                    ctx.fillText(overlayText, renderCanvas.width / 2, renderCanvas.height / 2);
+                }
+
+                requestAnimationFrame(drawFrame);
+            };
+
+            drawFrame();
+        };
+
+        // Screenshot Logic (Updated to use canvas logic)
+        btnScreenshot.onclick = () => {
+            renderCanvas.width = video.videoWidth;
+            renderCanvas.height = video.videoHeight;
+            const ctx = renderCanvas.getContext('2d');
+            
+            // Apply current filter
+            if (activeFilter === 'rad') ctx.filter = 'sepia(100%) hue-rotate(50deg) saturate(300%) contrast(1.2)';
+            else if (activeFilter === 'xray') ctx.filter = 'invert(100%) contrast(1.5)';
+            else if (activeFilter === 'term') ctx.filter = 'grayscale(100%) contrast(2) brightness(0.8)';
+            else if (activeFilter === 'bio') ctx.filter = 'hue-rotate(240deg) contrast(1.2) saturate(2)';
+            
+            ctx.drawImage(video, 0, 0);
+            
+            if (showOverlay && overlayText) {
+                ctx.filter = 'none';
+                ctx.font = "bold 40px 'Share Tech Mono', monospace";
+                ctx.fillStyle = "#39ff14";
+                ctx.textAlign = "center";
+                ctx.fillText(overlayText, renderCanvas.width / 2, renderCanvas.height / 2);
+            }
+
+            const a = document.createElement('a');
+            a.href = renderCanvas.toDataURL('image/png');
+            a.download = `VORTEX_SNAP_${Date.now()}.png`;
+            a.click();
+            updateStatus("SNAPSHOT SAVED");
+        };
+
+    </script>
+</body>
+</html>
